@@ -1,4 +1,5 @@
 <?php
+// routes/web.php (COMPLETE & FIXED)
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
@@ -31,6 +32,17 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 require __DIR__.'/auth.php';
 
 // ================================================================
+// DASHBOARD REDIRECT (based on role)
+// ================================================================
+
+Route::get('/dashboard', function () {
+    if (auth()->user()->isAdmin()) {
+        return redirect()->route('admin.dashboard');
+    }
+    return redirect()->route('user.dashboard');
+})->middleware('auth')->name('dashboard');
+
+// ================================================================
 // USER ROUTES (Authenticated Users)
 // ================================================================
 
@@ -44,19 +56,19 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/modules/{module:slug}', [UserModule::class, 'show'])->name('modules.show');
     
     // Chapters
-    Route::get('/chapters/{chapter:id}', [UserChapter::class, 'show'])->name('chapters.show');
-    Route::post('/chapters/{chapter:id}/complete', [UserChapter::class, 'complete'])->name('chapters.complete');
-    Route::post('/chapters/{chapter:id}/uncomplete', [UserChapter::class, 'uncomplete'])->name('chapters.uncomplete');
+    Route::get('/chapters/{chapter}', [UserChapter::class, 'show'])->name('chapters.show');
+    Route::post('/chapters/{chapter}/complete', [UserChapter::class, 'complete'])->name('chapters.complete');
+    Route::post('/chapters/{chapter}/uncomplete', [UserChapter::class, 'uncomplete'])->name('chapters.uncomplete');
     
     // Quizzes
-    Route::get('/quizzes/{quiz:id}', [UserQuiz::class, 'show'])->name('quizzes.show');
-    Route::post('/quizzes/{quiz:id}/submit', [UserQuiz::class, 'submit'])->name('quizzes.submit');
-    Route::get('/quizzes/{quiz:id}/results/{attempt:id}', [UserQuiz::class, 'results'])->name('quizzes.results');
+    Route::get('/quizzes/{quiz}', [UserQuiz::class, 'show'])->name('quizzes.show');
+    Route::post('/quizzes/{quiz}/submit', [UserQuiz::class, 'submit'])->name('quizzes.submit');
+    Route::get('/quizzes/{quiz}/results/{attempt}', [UserQuiz::class, 'results'])->name('quizzes.results');
     
-    // Profile
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Profile (FIX: Change prefix to avoid conflict)
+    Route::get('/settings', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/settings', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/settings', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 // ================================================================
@@ -70,12 +82,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // Modules CRUD
     Route::resource('modules', AdminModule::class);
+    Route::post('/modules/{module}/toggle', [AdminModule::class, 'toggle'])->name('modules.toggle');
     
     // Chapters CRUD
     Route::resource('chapters', AdminChapter::class);
+    Route::post('/chapters/{chapter}/toggle', [AdminChapter::class, 'toggle'])->name('chapters.toggle');
     
     // Quizzes CRUD
     Route::resource('quizzes', AdminQuiz::class);
+    Route::post('/quizzes/{quiz}/toggle', [AdminQuiz::class, 'toggle'])->name('quizzes.toggle');
     
     // Questions CRUD (nested under quiz)
     Route::get('/quizzes/{quiz}/questions/create', [AdminQuestion::class, 'create'])->name('questions.create');
@@ -86,25 +101,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // Users CRUD
     Route::resource('users', AdminUser::class);
-    
-    // Quick actions
-    Route::post('/modules/{module}/toggle', [AdminModule::class, 'toggle'])->name('modules.toggle');
-    Route::post('/chapters/{chapter}/toggle', [AdminChapter::class, 'toggle'])->name('chapters.toggle');
-    Route::post('/quizzes/{quiz}/toggle', [AdminQuiz::class, 'toggle'])->name('quizzes.toggle');
+
+    // // Admin toggles
+    // Route::post('/admin/modules/{module}/toggle', [ModuleController::class, 'toggle']);
+    // Route::post('/admin/chapters/{chapter}/toggle', [ChapterController::class, 'toggle']);
+    // Route::post('/admin/quizzes/{quiz}/toggle', [QuizController::class, 'toggle']);
+
+    // // User settings
+    // Route::get('/user/settings', [UserSettingsController::class, 'show']);
+    // Route::patch('/user/settings', [UserSettingsController::class, 'update']);
+    // Route::delete('/user/settings', [UserSettingsController::class, 'destroy']);
+
 });
-
-// ================================================================
-// Redirect based on role after login
-// ================================================================
-
-Route::get('/dashboard', function () {
-    if (auth()->user()->isAdmin()) {
-        return redirect()->route('admin.dashboard');
-    }
-    return redirect()->route('user.dashboard');
-})->middleware('auth')->name('dashboard');
-
-// Profile Routes (ADD THIS)
-Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

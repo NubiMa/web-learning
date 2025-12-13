@@ -1,5 +1,5 @@
 <?php
-// app/Http/Controllers/User/DashboardController.php
+// app/Http/Controllers/User/DashboardController.php (FIXED)
 
 namespace App\Http\Controllers\User;
 
@@ -13,13 +13,22 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         
-        // Get all modules with progress
+        // Get all modules with progress and chapters
         $modules = Module::with('chapters')
             ->where('is_active', true)
             ->orderBy('order')
             ->get()
             ->map(function($module) use ($user) {
                 $module->progress_percentage = $user->getModuleProgress($module->id);
+                
+                // Add completed chapters count
+                $module->completed_chapters_count = $user->progress()
+                    ->whereHas('chapter', function($query) use ($module) {
+                        $query->where('module_id', $module->id);
+                    })
+                    ->where('completed', true)
+                    ->count();
+                    
                 return $module;
             });
 

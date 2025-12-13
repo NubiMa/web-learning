@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Module;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -41,9 +42,15 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        $user->load(['progress.chapter.module', 'quizAttempts.quiz']);
+        $user->load(['progress.chapter.module', 'quizAttempts.quiz.module']);
         
-        return view('admin.users.show', compact('user'));
+        // Get module progress
+        $modules = Module::all()->map(function($module) use ($user) {
+            $module->user_progress = $user->getModuleProgress($module->id);
+            return $module;
+        });
+        
+        return view('admin.users.show', compact('user', 'modules'));
     }
 
     public function edit(User $user)

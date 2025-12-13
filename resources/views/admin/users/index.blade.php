@@ -16,7 +16,7 @@
     <div class="flex items-center space-x-4">
         <!-- Role Filter -->
         <select class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-            <option>Role: All</option>
+            <option>All</option>
             <option>Admin</option>
             <option>User</option>
         </select>
