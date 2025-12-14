@@ -31,6 +31,7 @@
             <!-- Navigation -->
             <nav class="p-4">
                 <div class="space-y-1">
+                    <!-- Dashboard -->
                     <a href="{{ route('user.dashboard') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('user.dashboard') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
@@ -38,20 +39,23 @@
                         <span class="font-medium">Kursus</span>
                     </a>
 
-                    <a href="{{ route('user.modules.index') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('user.modules.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
+                    <!-- Modules -->
+                    <a href="{{ route('user.modules.index') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('user.modules.*') || request()->routeIs('user.chapters.*') || request()->routeIs('user.quizzes.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                         </svg>
-                        <span class="font-medium">Quiz</span>
+                        <span class="font-medium">Materi</span>
                     </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50">
+                    <!-- Progress (NEW) -->
+                    <a href="{{ route('user.progress.index') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('user.progress.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                         </svg>
                         <span class="font-medium">Progress</span>
                     </a>
 
+                    <!-- Profile -->
                     <a href="{{ route('user.profile.edit') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('user.profile.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>

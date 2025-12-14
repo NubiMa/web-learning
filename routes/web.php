@@ -5,7 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
-// Admin Controllers
+// ===== ADMIN CONTROLLERS =====
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\ModuleController as AdminModule;
 use App\Http\Controllers\Admin\ChapterController as AdminChapter;
@@ -13,11 +13,12 @@ use App\Http\Controllers\Admin\QuizController as AdminQuiz;
 use App\Http\Controllers\Admin\QuestionController as AdminQuestion;
 use App\Http\Controllers\Admin\UserController as AdminUser;
 
-// User Controllers
+// ===== USER CONTROLLERS =====
 use App\Http\Controllers\User\DashboardController as UserDashboard;
 use App\Http\Controllers\User\ModuleController as UserModule;
 use App\Http\Controllers\User\ChapterController as UserChapter;
 use App\Http\Controllers\User\QuizController as UserQuiz;
+use App\Http\Controllers\User\ProgressController as UserProgress;  // ← FIX: Import ProgressController
 
 // ================================================================
 // PUBLIC ROUTES
@@ -65,6 +66,12 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::post('/quizzes/{quiz}/submit', [UserQuiz::class, 'submit'])->name('quizzes.submit');
     Route::get('/quizzes/{quiz}/results/{attempt}', [UserQuiz::class, 'results'])->name('quizzes.results');
     
+    // Progress (NEW)
+    Route::get('/progress', [UserProgress::class, 'index'])->name('progress.index');
+    Route::get('/progress/module/{module:slug}', [UserProgress::class, 'module'])->name('progress.module');
+    Route::post('/progress/{module}/reset', [UserProgress::class, 'reset'])->name('progress.reset');
+    Route::get('/progress/export', [UserProgress::class, 'export'])->name('progress.export');
+    
     // Profile (FIX: Change prefix to avoid conflict)
     Route::get('/settings', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/settings', [ProfileController::class, 'update'])->name('profile.update');
@@ -101,15 +108,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // Users CRUD
     Route::resource('users', AdminUser::class);
-
-    // // Admin toggles
-    // Route::post('/admin/modules/{module}/toggle', [ModuleController::class, 'toggle']);
-    // Route::post('/admin/chapters/{chapter}/toggle', [ChapterController::class, 'toggle']);
-    // Route::post('/admin/quizzes/{quiz}/toggle', [QuizController::class, 'toggle']);
-
-    // // User settings
-    // Route::get('/user/settings', [UserSettingsController::class, 'show']);
-    // Route::patch('/user/settings', [UserSettingsController::class, 'update']);
-    // Route::delete('/user/settings', [UserSettingsController::class, 'destroy']);
-
 });

@@ -1,4 +1,5 @@
 <?php
+// app/Models/Module.php
 
 namespace App\Models;
 
@@ -47,9 +48,7 @@ class Module extends Model
         return $this->hasMany(Quiz::class);
     }
 
-    // Get total chapters count
-    public function getTotalChaptersAttribute()
-    {
-        return $this->chapters()->count();
-    }
+    // REMOVED: getTotalChaptersAttribute() 
+    // Karena conflict dengan property yang di-set manual di controller
+    // Sekarang gunakan method biasa atau langsung $module->chapters()->count()
 }
