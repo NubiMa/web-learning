@@ -1,5 +1,6 @@
 @extends('layouts.user')
 
+@section('title', 'Account Settings')
 @section('page-title', 'Account Settings')
 
 @section('content')
@@ -39,20 +40,6 @@
                         <span class="font-medium">Security</span>
                     </a>
 
-                    <a href="#notifications" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                        </svg>
-                        <span class="font-medium">Notifications</span>
-                    </a>
-
-                    <a href="#activity" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <span class="font-medium">Activity Log</span>
-                    </a>
-
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="w-full flex items-center px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg">
@@ -68,9 +55,16 @@
 
         <!-- Main Content -->
         <div class="col-span-12 lg:col-span-9 space-y-6">
+            <!-- Success Message -->
+            @if(session('success'))
+            <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
+                {{ session('success') }}
+            </div>
+            @endif
+
             <!-- Profile Photo Section -->
-            <div class="bg-white rounded-xl shadow-sm p-6">
-                <div class="flex items-start justify-between">
+            <div id="general" class="bg-white rounded-xl shadow-sm p-6">
+                <div class="flex items-start justify-between mb-6">
                     <div class="flex items-center">
                         <div class="relative">
                             <div class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold">
@@ -99,7 +93,7 @@
                 <h3 class="text-lg font-bold text-gray-900 mb-2">Personal Information</h3>
                 <p class="text-sm text-gray-600 mb-6">Update your personal details here.</p>
 
-                <form method="POST" action="{{ route('user.profile.update') }}" class="space-y-6">
+                <form method="POST" action="{{ route('user.profile.update') }}">
                     @csrf
                     @method('PATCH')
 
@@ -117,8 +111,8 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-6">
-                        <!-- Email -->
+                    <div class="grid grid-cols-2 gap-6 mt-6">
+                        <!-- Email (Read-only) -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                             <div class="relative">
@@ -139,21 +133,64 @@
                     </div>
 
                     <!-- Bio -->
-                    <div>
+                    <div class="mt-6">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Bio</label>
                         <textarea name="bio" rows="4" maxlength="240" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Passionate about learning Laravel and building modern web applications. Currently working on my portfolio."></textarea>
                         <p class="mt-1 text-sm text-gray-500 text-right">240 characters left</p>
                     </div>
 
                     <!-- Buttons -->
-                    <div class="flex justify-end space-x-3">
+                    <div class="flex justify-end space-x-3 mt-6">
                         <button type="button" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Cancel</button>
                         <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save Changes</button>
                     </div>
                 </form>
             </div>
 
-            <!-- Recent Activity -->
+            <!-- Security Section -->
+            <div id="security" class="bg-white rounded-xl shadow-sm p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Change Password</h3>
+                <p class="text-sm text-gray-600 mb-6">Update your password to keep your account secure.</p>
+
+                <form method="POST" action="{{ route('password.update') }}">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="space-y-4">
+                        <!-- Current Password -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                            <input type="password" name="current_password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            @error('current_password', 'updatePassword')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- New Password -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                            <input type="password" name="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            @error('password', 'updatePassword')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                            <input type="password" name="password_confirmation" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Cancel</button>
+                        <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Update Password</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Recent Activity (Coming Soon) -->
             <div class="bg-white rounded-xl shadow-sm p-6">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-lg font-bold text-gray-900">Recent Activity</h3>
@@ -191,4 +228,19 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+// Smooth scroll to sections
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+</script>
+@endpush
 @endsection

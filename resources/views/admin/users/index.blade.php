@@ -7,7 +7,12 @@
 <div class="mb-6 flex items-center justify-between">
     <!-- Search -->
     <div class="relative w-96">
-        <input type="text" placeholder="Search users..." class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        <input 
+            type="text" 
+            placeholder="Search users..." 
+            data-admin-search="table"
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        >
         <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
@@ -15,11 +20,16 @@
 
     <div class="flex items-center space-x-4">
         <!-- Role Filter -->
-        <select class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-            <option>All</option>
-            <option>Admin</option>
-            <option>User</option>
+        <select 
+            data-filter="table" 
+            data-filter-column="2"
+            class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+        >
+            <option value="all">All</option>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
         </select>
+
 
         <!-- Add User Button -->
         <a href="{{ route('admin.users.create') }}" class="inline-flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
@@ -99,6 +109,13 @@
                 </td>
             </tr>
             @endforeach
+            
+            <!-- no results row -->
+            <tr id="noResults" style="display: none;">
+                <td colspan="5" class="px-6 py-8 text-center text-gray-500">
+                    No users found matching your criteria.
+                </td>
+            </tr>
         </tbody>
     </table>
 

@@ -1,4 +1,7 @@
+// resources/js/search.js
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Module Search (Dashboard & Progress)
     const searchInput = document.getElementById('moduleSearch');
     
     if (!searchInput) return;
@@ -42,5 +45,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 300);
     
-    searchInput.addEventListener('input', performSearch);
+    // Top bar search (in header)
+    const headerSearch = document.querySelector('input[placeholder="Cari kursus..."]');
+    if (headerSearch && !headerSearch.id) {
+        headerSearch.addEventListener('input', debounce(function(e) {
+            const term = e.target.value.toLowerCase().trim();
+            if (term.length >= 2) {
+                // Redirect to modules page with search query
+                window.location.href = `/user/modules?search=${encodeURIComponent(term)}`;
+            }
+        }, 500));
+    }
 });

@@ -1,5 +1,6 @@
 import './bootstrap';
 import './search';
+import './admin-search';
 
 import Alpine from 'alpinejs';
 
