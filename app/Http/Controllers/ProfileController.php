@@ -41,6 +41,9 @@ class ProfileController extends Controller
             $user->name = trim($firstName . ' ' . $lastName);
         }
 
+        $user->job_title = $validated['job_title'] ?? $user->job_title;
+        $user->bio = $validated['bio'] ?? $user->bio;
+
         $user->save();
 
         return back()->with('success', 'Profile updated successfully!');

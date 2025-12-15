@@ -77,12 +77,12 @@
 <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-xl font-bold">Module Progress</h2>
-        <a href="#" onclick="exportProgress()" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+        <!-- <a href="#" onclick="exportProgress()" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
             </svg>
             Export Progress
-        </a>
+        </a> -->
     </div>
 
     <div class="space-y-6">
@@ -156,10 +156,10 @@
 @endif
 
 @push('scripts')
-<script>
+<!-- <script>
 function exportProgress() {
     window.location.href = '{{ route("user.progress.export") }}';
 }
-</script>
+</script> -->
 @endpush
 @endsection

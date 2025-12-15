@@ -1,3 +1,4 @@
+{{-- resources/views/user/profile/edit.blade.php (FIXED) --}}
 @extends('layouts.user')
 
 @section('title', 'Account Settings')
@@ -17,11 +18,15 @@
             <div class="bg-white rounded-xl shadow-sm p-4">
                 <!-- User Info -->
                 <div class="text-center mb-6 pb-6 border-b border-gray-200">
-                    <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold">
-                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                    </div>
+                    @if(Auth::user()->profile_picture)
+                        <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile" class="w-20 h-20 mx-auto mb-3 rounded-full object-cover">
+                    @else
+                        <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold">
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        </div>
+                    @endif
                     <h3 class="font-bold text-gray-900">{{ Auth::user()->name }}</h3>
-                    <p class="text-sm text-gray-500">PRO MEMBER</p>
+                    <p class="text-sm text-gray-500">{{ Auth::user()->role == 'admin' ? 'ADMIN' : 'STUDENT' }}</p>
                 </div>
 
                 <!-- Navigation Items -->
@@ -62,15 +67,27 @@
             </div>
             @endif
 
-            <!-- Profile Photo Section -->
+            <!-- Profile Photo Section (FIXED) -->
             <div id="general" class="bg-white rounded-xl shadow-sm p-6">
                 <div class="flex items-start justify-between mb-6">
                     <div class="flex items-center">
                         <div class="relative">
-                            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold">
-                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                            </div>
-                            <button class="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50">
+                            @if(Auth::user()->profile_picture)
+                                <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile" class="w-24 h-24 rounded-full object-cover">
+                            @else
+                                <div class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                </div>
+                            @endif
+                            
+                            <!-- Upload Button -->
+                            <form id="uploadPictureForm" method="POST" action="{{ route('user.profile.update') }}" enctype="multipart/form-data" style="display:none;">
+                                @csrf
+                                @method('PATCH')
+                                <input type="file" id="profilePictureInput" name="profile_picture" accept="image/*">
+                            </form>
+                            
+                            <button onclick="document.getElementById('profilePictureInput').click()" class="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50">
                                 <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                                 </svg>
@@ -78,17 +95,22 @@
                         </div>
                         <div class="ml-6">
                             <h3 class="text-lg font-bold text-gray-900">Profile Photo</h3>
-                            <p class="text-sm text-gray-600">This will be displayed on your profile and in course discussions.</p>
+                            <p class="text-sm text-gray-600">JPG, PNG or GIF. Max size 2MB.</p>
                         </div>
                     </div>
                     <div class="flex space-x-3">
-                        <button class="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50">Delete</button>
-                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Change Photo</button>
+                        @if(Auth::user()->profile_picture)
+                        <form method="POST" action="{{ route('user.profile.deletePicture') }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50">Delete</button>
+                        </form>
+                        @endif
                     </div>
                 </div>
             </div>
 
-            <!-- Personal Information -->
+            <!-- Personal Information (FIXED) -->
             <div class="bg-white rounded-xl shadow-sm p-6">
                 <h3 class="text-lg font-bold text-gray-900 mb-2">Personal Information</h3>
                 <p class="text-sm text-gray-600 mb-6">Update your personal details here.</p>
@@ -125,23 +147,25 @@
                             </div>
                         </div>
 
-                        <!-- Job Title -->
+                        <!-- Job Title (FIXED) -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Job Title / Role</label>
-                            <input type="text" name="job_title" placeholder="Full Stack Student" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <input type="text" name="job_title" value="{{ Auth::user()->job_title }}" placeholder="Full Stack Student" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
                     </div>
 
-                    <!-- Bio -->
+                    <!-- Bio (FIXED) -->
                     <div class="mt-6">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Bio</label>
-                        <textarea name="bio" rows="4" maxlength="240" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Passionate about learning Laravel and building modern web applications. Currently working on my portfolio."></textarea>
-                        <p class="mt-1 text-sm text-gray-500 text-right">240 characters left</p>
+                        <textarea name="bio" id="bioTextarea" rows="4" maxlength="240" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Tell us about yourself...">{{ Auth::user()->bio }}</textarea>
+                        <p class="mt-1 text-sm text-gray-500 text-right">
+                            <span id="charCount">{{ 240 - strlen(Auth::user()->bio ?? '') }}</span> characters left
+                        </p>
                     </div>
 
                     <!-- Buttons -->
                     <div class="flex justify-end space-x-3 mt-6">
-                        <button type="button" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Cancel</button>
+                        <button type="button" onclick="window.location.reload()" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Cancel</button>
                         <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save Changes</button>
                     </div>
                 </form>
@@ -184,46 +208,10 @@
 
                     <!-- Buttons -->
                     <div class="flex justify-end space-x-3 mt-6">
-                        <button type="button" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Cancel</button>
+                        <button type="button" onclick="this.form.reset()" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Cancel</button>
                         <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Update Password</button>
                     </div>
                 </form>
-            </div>
-
-            <!-- Recent Activity (Coming Soon) -->
-            <div class="bg-white rounded-xl shadow-sm p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-bold text-gray-900">Recent Activity</h3>
-                    <a href="#" class="text-blue-600 hover:text-blue-700 text-sm font-medium">View All</a>
-                </div>
-
-                <div class="space-y-4">
-                    <!-- Activity Item -->
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <div class="ml-4 flex-1">
-                            <p class="text-sm font-medium text-gray-900">Completed course "Laravel 10 Fundamentals"</p>
-                            <p class="text-xs text-gray-500">2 hours ago</p>
-                        </div>
-                    </div>
-
-                    <!-- Activity Item -->
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
-                            </svg>
-                        </div>
-                        <div class="ml-4 flex-1">
-                            <p class="text-sm font-medium text-gray-900">Logged in from new device (MacBook Pro)</p>
-                            <p class="text-xs text-gray-500">Yesterday at 10:45 AM</p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -231,6 +219,24 @@
 
 @push('scripts')
 <script>
+// Auto-submit profile picture form when file selected
+document.getElementById('profilePictureInput').addEventListener('change', function() {
+    if (this.files && this.files[0]) {
+        document.getElementById('uploadPictureForm').submit();
+    }
+});
+
+// Character counter for bio
+const bioTextarea = document.getElementById('bioTextarea');
+const charCount = document.getElementById('charCount');
+
+if (bioTextarea && charCount) {
+    bioTextarea.addEventListener('input', function() {
+        const remaining = 240 - this.value.length;
+        charCount.textContent = remaining;
+    });
+}
+
 // Smooth scroll to sections
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {

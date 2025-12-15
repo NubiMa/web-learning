@@ -1,0 +1,1 @@
+throw error when slug unique constraint is violated

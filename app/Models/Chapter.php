@@ -1,4 +1,5 @@
 <?php
+// app/Models/Chapter.php (FIXED)
 
 namespace App\Models;
 
@@ -29,9 +30,41 @@ class Chapter extends Model
     {
         parent::boot();
         
+        // AUTO-GENERATE UNIQUE SLUG
         static::creating(function ($chapter) {
             if (empty($chapter->slug)) {
-                $chapter->slug = Str::slug($chapter->title);
+                $slug = Str::slug($chapter->title);
+                $originalSlug = $slug;
+                $count = 1;
+                
+                // Check if slug exists in the same module
+                while (static::where('module_id', $chapter->module_id)
+                    ->where('slug', $slug)
+                    ->exists()) {
+                    $slug = $originalSlug . '-' . $count;
+                    $count++;
+                }
+                
+                $chapter->slug = $slug;
+            }
+        });
+        
+        // ALSO HANDLE UPDATING
+        static::updating(function ($chapter) {
+            if ($chapter->isDirty('title') && empty($chapter->slug)) {
+                $slug = Str::slug($chapter->title);
+                $originalSlug = $slug;
+                $count = 1;
+                
+                while (static::where('module_id', $chapter->module_id)
+                    ->where('slug', $slug)
+                    ->where('id', '!=', $chapter->id)
+                    ->exists()) {
+                    $slug = $originalSlug . '-' . $count;
+                    $count++;
+                }
+                
+                $chapter->slug = $slug;
             }
         });
     }
@@ -61,6 +94,7 @@ class Chapter extends Model
     {
         return Chapter::where('module_id', $this->module_id)
             ->where('order', '>', $this->order)
+            ->where('is_active', true)
             ->orderBy('order')
             ->first();
     }
@@ -70,6 +104,7 @@ class Chapter extends Model
     {
         return Chapter::where('module_id', $this->module_id)
             ->where('order', '<', $this->order)
+            ->where('is_active', true)
             ->orderBy('order', 'desc')
             ->first();
     }
