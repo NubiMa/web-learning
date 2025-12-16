@@ -68,9 +68,13 @@
             <!-- User Info (Bottom) -->
             <div class="absolute bottom-0 left-0 right-0 w-64 p-4 border-t border-gray-200 bg-white">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
-                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                    </div>
+                    @if(Auth::user()->profile_picture)
+                        <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile" class="w-10 h-10 rounded-full object-cover">
+                    @else
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        </div>
+                    @endif
                     <div class="ml-3 flex-1">
                         <p class="text-sm font-medium text-gray-900 truncate">{{ Auth::user()->name }}</p>
                         <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>

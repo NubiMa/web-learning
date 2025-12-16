@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         searchInput.addEventListener('input', debounce(function(e) {
             const searchTerm = e.target.value.toLowerCase().trim();
-            console.log('🔎 Searching for:', searchTerm);
+            console.log('Searching for:', searchTerm);
             
             const moduleCards = document.querySelectorAll('[data-module-card]');
             let visibleCount = 0;
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            console.log(`📊 Found ${visibleCount} modules`);
+            console.log(`Found ${visibleCount} modules`);
             
             // Show/hide no results message
             const noResults = document.getElementById('noSearchResults');

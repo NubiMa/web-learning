@@ -67,6 +67,22 @@
             </div>
             @endif
 
+            <!-- Error Message -->
+            @if(session('error'))
+            <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+                {{ session('error') }}
+            </div>
+            @endif
+
+            <!-- Debug Info (Remove after testing)
+            @if(Auth::user()->profile_picture)
+            <div class="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg text-sm">
+                <strong>Debug:</strong> Picture Path = {{ Auth::user()->profile_picture }}<br>
+                <strong>Full URL:</strong> {{ asset('storage/' . Auth::user()->profile_picture) }}<br>
+                <strong>File Exists:</strong> {{ Storage::disk('public')->exists(Auth::user()->profile_picture) ? 'YES ✅' : 'NO ❌' }}
+            </div>
+            @endif -->
+
             <!-- Profile Photo Section (FIXED) -->
             <div id="general" class="bg-white rounded-xl shadow-sm p-6">
                 <div class="flex items-start justify-between mb-6">

@@ -18,12 +18,12 @@
         </svg>
     </div>
 
-    <div class="flex items-center space-x-4">
+    <div class="flex items-center space-x-3">
         <!-- Role Filter -->
         <select 
             data-filter="table" 
             data-filter-column="2"
-            class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            class="px-8 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
         >
             <option value="all">All</option>
             <option value="admin">Admin</option>
@@ -59,9 +59,17 @@
                 <!-- Name -->
                 <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center">
-                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
-                            {{ strtoupper(substr($user->name, 0, 1)) }}
-                        </div>
+                        @if($user->profile_picture)
+                            <img 
+                                src="{{ asset('storage/' . $user->profile_picture) }}" 
+                                alt="Profile"
+                                class="w-10 h-10 rounded-full object-cover"
+                            >
+                        @else
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
+                                {{ strtoupper(substr($user->name, 0, 1)) }}
+                            </div>
+                        @endif
                         <div class="ml-4">
                             <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
                         </div>

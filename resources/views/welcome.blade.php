@@ -60,7 +60,7 @@
                     <h1 class="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
                         Master Web Development with 
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                            Laravel & Tailwind CSS
+                            Modules & Quizzes
                         </span>
                     </h1>
                     <p class="text-xl text-gray-600 mb-8 leading-relaxed">
@@ -109,7 +109,7 @@
         Hello World
     <span class="text-pink-400">&lt;/h1&gt;</span>
     <span class="text-pink-400">&lt;p</span> <span class="text-blue-400">class</span>=<span class="text-green-400">"text-gray-600"</span><span class="text-pink-400">&gt;</span>
-        Belajar Laravel & Tailwind
+        Belajar Bahasa Pemrograman Dengan Mudah
     <span class="text-pink-400">&lt;/p&gt;</span>
 <span class="text-pink-400">&lt;/div&gt;</span></code></pre>
                         </div>

@@ -4,8 +4,22 @@
 @section('page-title', 'Modules Management')
 
 @section('content')
-<div class="mb-6">
-    <a href="{{ route('admin.modules.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+<div class="mb-6 flex items-center justify-between">
+    <!-- Search Bar -->
+    <div class="relative w-96">
+        <input 
+            type="text" 
+            placeholder="Search modules..." 
+            data-admin-search="table"
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        >
+        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+    </div>
+
+    <!-- Create Button -->
+    <a href="{{ route('admin.modules.create') }}" class="inline-flex items-center px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
