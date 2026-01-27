@@ -13,9 +13,9 @@ class QuizController extends Controller
     {
         $user = auth()->user();
         
-        // Load questions
+        // Load published questions only
         $quiz->load(['questions' => function($query) {
-            $query->orderBy('order');
+            $query->published()->orderBy('order');
         }, 'module']);
 
         // Get user's attempts
@@ -54,9 +54,9 @@ class QuizController extends Controller
             abort(403);
         }
 
-        // Load quiz with questions
+        // Load quiz with published questions only
         $quiz->load(['questions' => function($query) {
-            $query->orderBy('order');
+            $query->published()->orderBy('order');
         }, 'module']);
 
         // Get user answers

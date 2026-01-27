@@ -115,6 +115,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/questions/{question}', [AdminQuestion::class, 'update'])->name('questions.update');
     Route::delete('/questions/{question}', [AdminQuestion::class, 'destroy'])->name('questions.destroy');
     
+    // Draft questions
+    Route::get('/quizzes/{quiz}/questions/drafts', [AdminQuestion::class, 'showDrafts'])->name('questions.drafts');
+    Route::post('/quizzes/{quiz}/questions/add-draft/{question}', [AdminQuestion::class, 'addDraft'])->name('questions.addDraft');
+    
+    // Excel import
+    Route::get('/quizzes/{quiz}/questions/import', [AdminQuestion::class, 'showImport'])->name('questions.import');
+    Route::post('/quizzes/{quiz}/questions/import', [AdminQuestion::class, 'importExcel'])->name('questions.importPost');
+    Route::get('/questions/template', [AdminQuestion::class, 'downloadTemplate'])->name('questions.template');
+    
     // Users CRUD
     Route::resource('users', AdminUser::class);
 });

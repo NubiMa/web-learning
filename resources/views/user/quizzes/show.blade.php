@@ -70,6 +70,13 @@
         @foreach($quiz->questions as $question)
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="font-medium text-lg mb-4">{{ $loop->iteration }}. {{ $question->question }}</h3>
+            
+            @if($question->image)
+            <div class="mb-4">
+                <img src="{{ asset('storage/' . $question->image) }}" alt="Question image" class="max-w-full h-auto rounded-lg border border-gray-200">
+            </div>
+            @endif
+            
             <div class="space-y-3">
                 @foreach($question->options as $index => $option)
                 <label class="flex items-center p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition">

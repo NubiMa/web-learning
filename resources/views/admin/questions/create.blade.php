@@ -4,14 +4,27 @@
 @section('page-title', 'Add Question to: ' . $quiz->title)
 
 @section('content')
-<div class="max-w-3xl">
+<div class="max-w-3xl mx-auto">
     <div class="bg-white rounded-lg shadow p-6">
-        <form action="{{ route('admin.questions.store', $quiz) }}" method="POST">
+        <form action="{{ route('admin.questions.store', $quiz) }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-4">
                 <label for="question" class="block text-sm font-medium text-gray-700 mb-2">Question</label>
                 <textarea name="question" id="question" rows="3" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">{{ old('question') }}</textarea>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Question Image (optional)</label>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-1">
+                        <input type="file" name="image" id="image" accept="image/jpeg,image/png,image/jpg,image/gif" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" onchange="previewImage(event)">
+                        <p class="text-xs text-gray-500 mt-1">Accepted formats: JPEG, PNG, GIF (max 2MB)</p>
+                    </div>
+                    <div id="imagePreview" class="hidden">
+                        <img id="preview" src="" alt="Image preview" class="w-32 h-32 object-cover rounded-lg border border-gray-300">
+                    </div>
+                </div>
             </div>
 
             <div class="mb-4">
@@ -38,9 +51,16 @@
                 <textarea name="explanation" id="explanation" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">{{ old('explanation') }}</textarea>
             </div>
 
-            <div class="mb-6">
+            <div class="mb-4">
                 <label for="order" class="block text-sm font-medium text-gray-700 mb-2">Order</label>
                 <input type="number" name="order" id="order" value="{{ old('order', $quiz->questions->count() + 1) }}" min="1" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div class="mb-6">
+                <label class="flex items-center">
+                    <input type="checkbox" name="is_draft" value="1" {{ old('is_draft') ? 'checked' : '' }} class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                    <span class="ml-2 text-sm text-gray-700">Save as Draft (won't be visible to users)</span>
+                </label>
             </div>
 
             <div class="flex justify-end space-x-3">
@@ -50,4 +70,21 @@
         </form>
     </div>
 </div>
-@endsection
+
+@push('scripts')
+<script>
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('preview').src = e.target.result;
+                document.getElementById('imagePreview').classList.remove('hidden');
+            }
+            reader.readAsDataURL(file);
+        } else {
+            document.getElementById('imagePreview').classList.add('hidden');
+        }
+    }
+</script>
+@endpush

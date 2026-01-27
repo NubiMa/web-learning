@@ -74,6 +74,12 @@
             </span>
         </div>
 
+        @if($result['question']->image)
+        <div class="mb-4">
+            <img src="{{ asset('storage/' . $result['question']->image) }}" alt="Question image" class="max-w-full h-auto rounded-lg border border-gray-200">
+        </div>
+        @endif
+
         <div class="space-y-2">
             @foreach($result['question']->options as $optIndex => $option)
             <div class="flex items-center p-3 rounded-lg {{ $optIndex == $result['question']->correct_answer ? 'bg-green-50 border border-green-200' : ($optIndex == $result['user_answer'] && !$result['is_correct'] ? 'bg-red-50 border border-red-200' : 'bg-gray-50') }}">
